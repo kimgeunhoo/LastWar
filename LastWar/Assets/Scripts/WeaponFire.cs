@@ -13,16 +13,20 @@ public class WeaponFire : MonoBehaviour
     private Vector3 bulletRotationOffset;
 
     private float fireTimer;
-    private bool isFiring;
 
     private void Update()
     {
-        if (isFiring == false)
+        FireInput();
+    }
+
+    private void FireInput()
+    {
+        if (Input.GetMouseButton(0) == false)
             return;
 
         fireTimer += Time.deltaTime;
 
-        if(fireTimer >= fireRate)
+        if (fireTimer >= fireRate)
         {
             fireTimer = 0f;
 
@@ -30,7 +34,7 @@ public class WeaponFire : MonoBehaviour
         }
     }
 
-    private void Fire()
+    public void Fire()
     {
         Bullet bullet = BulletPoolManager.Instance.GetBullet();
 

@@ -20,17 +20,6 @@ public class Player : MonoBehaviour
         controller = GetComponent<HumanSoldierController>();
     }
 
-    public void TakeDamage(int damage)
-    {
-        if (isDead)
-            return;
-
-        currentHp -= damage;
-
-        if (currentHp <= 0)
-            Die();
-        
-    }
 
     private void Die()
     {

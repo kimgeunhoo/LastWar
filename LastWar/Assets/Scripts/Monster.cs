@@ -8,6 +8,7 @@ public class Monster : MonoBehaviour
 
     private Transform playerTrs;
     private Player player;
+    private SquadController squadController;
 
     private int currentHp;
     private float attackTimer;
@@ -25,8 +26,10 @@ public class Monster : MonoBehaviour
         if (playerObj != null)
         {
             playerTrs = playerObj.transform;
-            player = playerObj.GetComponent<Player>();
+            player = playerObj.GetComponentInChildren<Player>();
         }
+
+        //Debug.Log($"[Monster] Player Ã£À½: {name} -> {player.name}");
     }
 
     private void Update()
@@ -34,25 +37,31 @@ public class Monster : MonoBehaviour
         if (isDead || player == null)
             return;
 
-        ChasePlayer();
-        AttackPlayer();
+        float distance = Vector3.Distance(transform.position, playerTrs.position);
+
+        if (distance > data.attackRange)
+        {
+            ChasePlayer();
+        }
+        else
+        {
+            AttackPlayer();
+        }
     }
 
     private void ChasePlayer()
     {
-        float distance = Vector3.Distance(transform.position, playerTrs.position);
+        Vector3 dir = (playerTrs.position - transform.position).normalized;
 
-        if (distance < data.attackRange)
-            return;
+        dir.y = 0;
+
+        transform.position += dir * data.Speed * Time.deltaTime;
 
         attackTimer += Time.deltaTime;
 
-        if (attackTimer >= data.attackCooldown)
+        if (dir != Vector3.zero)
         {
-            attackTimer = 0f;
-
-            if(player != null)
-                player.TakeDamage(data.Damage);
+            transform.rotation = Quaternion.LookRotation(dir);
         }
     }
 
@@ -76,6 +85,47 @@ public class Monster : MonoBehaviour
 
     private void AttackPlayer()
     {
-        throw new NotImplementedException();
+        float distance = Vector3.Distance(transform.position, playerTrs.position);
+
+        if (distance > data.attackRange)
+            return;
+
+        attackTimer += Time.deltaTime;
+
+        if(attackTimer >= data.attackCooldown)
+        {
+            attackTimer = 0f;
+
+            if(player != null)
+                squadController.TakeDamage(data.Damage);
+        }
+
+    }
+
+    public void ResetMonster()
+    {
+        currentHp = data.Hp;
+        isDead = false;
+        attackTimer = 0f;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (data != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, data.attackRange);
+        }
+
+        if (player != null)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position, playerTrs.position);
+        }
     }
 }

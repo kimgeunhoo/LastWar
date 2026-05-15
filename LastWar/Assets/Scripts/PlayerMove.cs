@@ -33,7 +33,7 @@ public class PlayerMove : MonoBehaviour
             mainCamara = Camera.main;
 
         targetPosition = transform.position;
-        controller = GetComponent<HumanSoldierController>();
+        controller = GetComponentInChildren<HumanSoldierController>();
         controller.animator.SetTrigger("Run");
         controller.animator.SetTrigger("Aim");
     }
