@@ -9,6 +9,7 @@ public class MonsterSpawner : MonoBehaviour
     [SerializeField]
     private Collider spawnArea;
 
+
     private float timer;
 
     private void Update()
@@ -18,13 +19,16 @@ public class MonsterSpawner : MonoBehaviour
         if (timer >= spawnInterval)
         {
             timer = 0f;
+
             SpawnMonster();
         }
     }
 
     private void SpawnMonster()
     {
-        if(spawnArea == null)
+
+
+        if (spawnArea == null)
         {
             Debug.LogError("[MonsterSpawner] SpawnArea가 비어있음");
             return;
@@ -53,12 +57,13 @@ public class MonsterSpawner : MonoBehaviour
         return new Vector3(randomX, bounds.center.y, randomZ);
     }
 
-    private void OnDrawGizmos()
-    {
-        if (spawnArea == null)
-            return;
+    // 범위 참고용
+    //private void OnDrawGizmos()
+    //{
+    //    if (spawnArea == null)
+    //        return;
 
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(spawnArea.bounds.center, spawnArea.bounds.size);
-    }
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireCube(spawnArea.bounds.center, spawnArea.bounds.size);
+    //}
 }

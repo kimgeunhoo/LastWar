@@ -26,6 +26,13 @@ public class SquadController : MonoBehaviour
     [SerializeField]
     private float maxLocalX = 3f;
 
+    [Header("Weapon Data")]
+    [SerializeField]
+    private WeaponData currentWeapon;
+
+    [Header("GameOverUI")]
+    [SerializeField]
+    private GameOverUI gameOverUI;
 
     private List<Transform> soldiers = new List<Transform>();
     private List<Vector3> targetLocalPositions = new List<Vector3>();
@@ -53,6 +60,7 @@ public class SquadController : MonoBehaviour
 
     public void AddPlayer(int amount)
     {
+
         for (int i = 0; i < amount; i++)
         {
             Transform inactiveSolider = GetInActiveSoludier();
@@ -69,6 +77,12 @@ public class SquadController : MonoBehaviour
                 GameObject clone = Instantiate(clonePrefab, playerParent);
                 clone.name = $"Soldier_(soldiers.Count)";
                 clone.tag = "Player";
+
+                WeaponController weapon = clone.GetComponentInChildren<WeaponController>();
+                if (weapon != null && currentWeapon != null)
+                {
+                    weapon.EquipWeapon(currentWeapon);
+                }
 
                 Rigidbody rb = clone.GetComponent<Rigidbody>();
                 if (rb != null)
@@ -158,7 +172,23 @@ public class SquadController : MonoBehaviour
 
         if (soldiers.Count <= 0)
         {
-            Debug.Log("Game Over");
+            gameObject.SetActive(false);
+            gameOverUI.ShowGameOver();
+        }
+    }
+
+    public void EquipWeaponToAll(WeaponData weaponData)
+    {
+        currentWeapon = weaponData;
+
+        for(int i = 0; i < soldiers.Count;i++)
+        {
+            WeaponController weapon = soldiers[i].GetComponentInChildren<WeaponController>();
+
+            if (weapon != null)
+            {
+                weapon.EquipWeapon(weaponData);
+            }
         }
     }
 

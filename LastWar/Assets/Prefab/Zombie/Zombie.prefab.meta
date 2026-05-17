@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 95ddc2cf570e86240a229f81b6acc58b
+guid: f99bbd0754201f448b27f0c455b92b76
 PrefabImporter:
   externalObjects: {}
   userData: 
@@ -7,8 +7,8 @@ PrefabImporter:
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 232270
-  packageName: Zombie 1
+  productId: 259680
+  packageName: Zombie Monster Animations FREE
   packageVersion: 1.0
-  assetPath: Assets/ArtStore3D/Zombie/Prefab/Zombie.prefab
-  uploadId: 839242
+  assetPath: Assets/Kevin Iglesias/Zombie Animations/Prefabs/Zombie.prefab
+  uploadId: 719174

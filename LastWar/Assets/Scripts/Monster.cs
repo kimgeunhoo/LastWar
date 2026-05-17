@@ -1,10 +1,13 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
     [SerializeField]
     private MonsterData data;
+    [SerializeField]
+    private Animator animator;
 
     private Transform playerTrs;
     private Player player;
@@ -13,6 +16,7 @@ public class Monster : MonoBehaviour
     private int currentHp;
     private float attackTimer;
     private bool isDead;
+    private bool isAttacking;
 
     private void Awake()
     {
@@ -28,7 +32,19 @@ public class Monster : MonoBehaviour
             playerTrs = playerObj.transform;
             player = playerObj.GetComponentInChildren<Player>();
         }
+        if (playerObj == null)
+        {
+            enabled = false;
+            return;
+        }
 
+        squadController = playerObj.GetComponent<SquadController>();
+
+        if (squadController == null)
+            squadController = playerObj.GetComponentInParent<SquadController>();
+
+        if (squadController == null)
+            squadController = FindFirstObjectByType<SquadController>();
         //Debug.Log($"[Monster] Player 찾음: {name} -> {player.name}");
     }
 
@@ -41,7 +57,7 @@ public class Monster : MonoBehaviour
 
         if (distance > data.attackRange)
         {
-            ChasePlayer();
+            TracePlayer();
         }
         else
         {
@@ -49,8 +65,12 @@ public class Monster : MonoBehaviour
         }
     }
 
-    private void ChasePlayer()
+    private void TracePlayer()
     {
+
+        if (playerTrs == null || player == null)
+            return;
+
         Vector3 dir = (playerTrs.position - transform.position).normalized;
 
         dir.y = 0;
@@ -62,6 +82,12 @@ public class Monster : MonoBehaviour
         if (dir != Vector3.zero)
         {
             transform.rotation = Quaternion.LookRotation(dir);
+
+            animator.SetBool("isTracking", true);
+        }
+        else
+        {
+            animator.SetBool("isTracking", false);
         }
     }
 
@@ -85,21 +111,50 @@ public class Monster : MonoBehaviour
 
     private void AttackPlayer()
     {
+        if (isAttacking)
+            return;
+
+        if (playerTrs == null)
+            return;
+
+        if (squadController == null)
+        {
+            Debug.LogWarning("[Monster] squadController가 null이라 공격 불가");
+            return;
+        }
+
         float distance = Vector3.Distance(transform.position, playerTrs.position);
 
         if (distance > data.attackRange)
             return;
 
-        attackTimer += Time.deltaTime;
+        StartCoroutine(AttackCoroutine());
+    }
 
-        if(attackTimer >= data.attackCooldown)
+    private IEnumerator AttackCoroutine()
+    {
+        isAttacking = true;
+
+        animator.SetTrigger("isAttack");
+        yield return new WaitForSeconds(data.attackDelay);
+
+        if (playerTrs == null || squadController == null)
         {
-            attackTimer = 0f;
-
-            if(player != null)
-                squadController.TakeDamage(data.Damage);
+            isAttacking = false;
+            yield break;
         }
 
+        float distance = Vector3.Distance(transform.position, playerTrs.position);
+
+        if (distance <= data.attackRange)
+        {
+            squadController.TakeDamage(data.Damage);
+        }
+
+        // 공격 쿨타임
+        yield return new WaitForSeconds(data.attackCooldown);
+
+        isAttacking = false;
     }
 
     public void ResetMonster()
@@ -109,23 +164,19 @@ public class Monster : MonoBehaviour
         attackTimer = 0f;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        
-    }
+    // 범위 참고용
+    //private void OnDrawGizmos()
+    //{
+    //    if (data != null)
+    //    {
+    //        Gizmos.color = Color.red;
+    //        Gizmos.DrawWireSphere(transform.position, data.attackRange);
+    //    }
 
-    private void OnDrawGizmos()
-    {
-        if (data != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, data.attackRange);
-        }
-
-        if (player != null)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position, playerTrs.position);
-        }
-    }
+    //    if (player != null)
+    //    {
+    //        Gizmos.color = Color.yellow;
+    //        Gizmos.DrawLine(transform.position, playerTrs.position);
+    //    }
+    //}
 }

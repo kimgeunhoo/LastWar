@@ -20,17 +20,4 @@ public class Player : MonoBehaviour
         controller = GetComponent<HumanSoldierController>();
     }
 
-
-    private void Die()
-    {
-        isDead = true;
-        DieAnimation();
-    }
-
-    private IEnumerator DieAnimation()
-    {
-        yield return null;
-        controller.animator.SetTrigger("Death01");
-        yield return new WaitForSeconds(1f);
-    }
 }

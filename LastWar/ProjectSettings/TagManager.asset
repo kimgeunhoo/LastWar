@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Wall
   - Clone
+  - Bullet
   layers:
   - Default
   - TransparentFX

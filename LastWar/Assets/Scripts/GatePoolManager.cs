@@ -8,7 +8,7 @@ public class GatePoolManager : MonoBehaviour
     [SerializeField] 
     private GameObject[] gatePrefabs;
     [SerializeField] 
-    private int poolSize = 20;
+    private int poolSize = 4;
 
     private readonly List<GameObject> gatePool = new List<GameObject>();
 
@@ -18,16 +18,9 @@ public class GatePoolManager : MonoBehaviour
 
         gatePool.Clear();
 
-        int half = poolSize / 2;
-
-        for (int i = 0; i < half; i++)
+        for (int i = 0; i < poolSize; i++)
         {
-            CreateGate(0);
-        }
-
-        for (int i = 0; i < half; i++)
-        {
-            CreateGate(1);
+            CreateGate(i);
         }
 
         ShufflePool();
@@ -54,11 +47,27 @@ public class GatePoolManager : MonoBehaviour
 
     public GameObject GetGate()
     {
+        List<GameObject> inactiveGates = new List<GameObject>();
+
         for (int i = 0; i < gatePool.Count; ++i)
         {
             if (gatePool[i].activeSelf == false)
-                return gatePool[i];
+            {
+                inactiveGates.Add(gatePool[i]);
+            }
         }
+
+        if (inactiveGates.Count > 0)
+            return inactiveGates[Random.Range(0, inactiveGates.Count)];
+
+        // 부족할때 쓰는 임시코드
+        //int randomIndex = Random.Range(0, gatePrefabs.Length);
+
+        //GameObject newGate = Instantiate(gatePrefabs[randomIndex], transform);
+
+        //newGate.SetActive(false);
+
+        //gatePool.Add(newGate);
 
         return GetGate();
     }

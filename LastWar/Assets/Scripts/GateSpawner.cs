@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GateSpawner : MonoBehaviour
@@ -18,6 +19,9 @@ public class GateSpawner : MonoBehaviour
 
     private float timer;
 
+    [SerializeField]
+    private ObstaclePoolManager obstaclePoolManager;
+
     private void Update()
     {
         timer += Time.deltaTime;
@@ -31,14 +35,20 @@ public class GateSpawner : MonoBehaviour
 
     private void SpawnGate()
     {
+        bool spawnValue = Random.value < 0.5f;
+        float gateX = spawnValue ? leftLineX : rightLineX;
+        float obstacleX = spawnValue ? rightLineX : leftLineX;
+
         GameObject gate = GatePoolManager.Instance.GetGate();
 
-        float spawnX = Random.value < 0.5f ? leftLineX : rightLineX;
-
-        gate.transform.position = new Vector3(spawnX, spawnY, spawnZ);
-
+        gate.transform.position = new Vector3(gateX, spawnY, spawnZ);
         gate.transform.rotation = Quaternion.identity;
-
         gate.SetActive(true);
+
+        GameObject obstacle = obstaclePoolManager.Getobstacle();
+
+        obstacle.transform.position = new Vector3(obstacleX, spawnY, spawnZ);
+        obstacle.transform.rotation = Quaternion.identity;
+        obstacle.SetActive(true);
     }
 }

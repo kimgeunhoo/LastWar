@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Monster
   m_EditorClassIdentifier: Assembly-CSharp::MonsterData
   hp: 10
-  damage: 3
-  speed: 3
+  damage: 1
+  speed: 5
   attackRange: 1.5
+  attackDelay: 1
   attackCooldown: 1

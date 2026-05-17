@@ -175,9 +175,10 @@ GameObject:
   - component: {fileID: 2599878530720655338}
   - component: {fileID: 5864839176201632517}
   - component: {fileID: 1676682762050499735}
+  - component: {fileID: 1230946014570333626}
   m_Layer: 0
   m_Name: SoldierAssaultRifleF
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -258,6 +259,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   playerData: {fileID: 11400000, guid: ff332e652d1a8be45926db5ce3f428e1, type: 2}
+--- !u!114 &1230946014570333626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963417570140818037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 379f27e8784094b4c95919c80e3410c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponController
+  weaponHolder: {fileID: 6054776708270756179}
 --- !u!1 &1028099965870855067
 GameObject:
   m_ObjectHideFlags: 0
